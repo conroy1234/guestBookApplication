@@ -1,7 +1,9 @@
 package org.reader.app.model;
 
 import static org.assertj.core.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 import org.reader.app.model.GuestbookEntry.GuestbookEntryBuilder;
 
 
@@ -9,8 +11,9 @@ public class GuestbookEntryUnitTests {
 
 
 	@Test
-	void setsCreationDate() {
-		
-		assertThat(new GuestbookEntryBuilder().name("Conroy White").text("visiting HR department").date().build()).isNotNull();
+	public void setsCreationDate() {
+		GuestbookEntry entry = new GuestbookEntryBuilder().name("Conroy White").text("visiting HR department").date().build();
+		assertEquals("Conroy White",entry.getName());
+		assertThat(entry).isNotNull();
 	}
 }
