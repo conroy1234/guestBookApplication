@@ -1,0 +1,11 @@
+<html>
+<head>Oops!
+</head>
+<link rel="stylesheet" th:href="@{/style.css}"></link>
+<body>
+	<div class="errorPage">
+		<span th:text="${path}">path</span><p/>
+		<p th:text="${'Details:' + message}"> check that you has entered the correct url</p>
+	</div>
+</body>
+</html>
