@@ -3,7 +3,9 @@ package org.reader.app.controller;
 import javax.validation.Valid;
 
 import org.reader.app.form.GuestbookForm;
+import org.reader.app.model.LoginUser;
 import org.reader.app.repository.GuestbookRepository;
+import org.reader.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -32,6 +35,9 @@ public class GuestbookController {
 
 	@Autowired
 	private final GuestbookRepository guestbook;
+	
+	@Autowired
+	UserRepository loginUser;
 
 	/**
 	 * 
@@ -42,38 +48,48 @@ public class GuestbookController {
 		this.guestbook = guestbook;
 	}
 
-	/**
-	 * Handles requests to the application root URI. Note, that you can use {@code redirect:} as prefix to trigger a
-	 * browser redirect instead of simply rendering a view.
-	 *
-	 * @return
-	 */
+
 	@GetMapping(path = "/")
 	public String index() {
 		return "redirect:/guestbook";
 	}
 
-	/**
-	 * Handles requests to access the guestbook. Obtains all currently available {@link GuestbookEntry}s and puts them
-	 * into the {@link Model} that's used to render the view.
-	 *
-	 * @return
-	 */
 	@GetMapping(path = "/guestbook")
-	public	String guestBook(Model model, @ModelAttribute(binding = false) GuestbookForm form) {
-
+	public	String guestBook(Model model,
+			@ModelAttribute(binding = false) GuestbookForm form) {
+		
+		
 		model.addAttribute("entries", guestbook.findAll());
 		model.addAttribute("form", form);
 
 		return "guestbook";
 	}
+	
+	@GetMapping(path = "/guestbook/guest")
+	public	String guestBookguest(Model model,
+			@ModelAttribute(binding = false) GuestbookForm form) {
+		
+		
+		model.addAttribute("entries", guestbook.findAll());
+		model.addAttribute("form", form);
 
+		return "guest";
+	}
+
+	@RequestMapping(value="/login/{username}",method=RequestMethod.GET)
+	public String loginUser(@PathVariable String username) {
+	LoginUser user=	loginUser.findByUsername(username);
+		if(user.getUsername().contentEquals("admin") || user.getUsername().contentEquals("guest1")) {
+			return "/redirect:/guestbook";
+		}else
+		return "error";
+	}
 
 	@PostMapping(path = "/guestbook")
 	public String addEntry(@Valid @ModelAttribute("form") GuestbookForm form, Errors errors, Model model) {
 
 		if (errors.hasErrors()) {
-			return guestBook(model, form);
+			return "guestbook";
 		}
 
 		guestbook.save(form.toNewEntry());

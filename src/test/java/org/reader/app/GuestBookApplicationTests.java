@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -67,6 +68,6 @@ public class GuestBookApplicationTests {
 		.andExpect(status().isOk())
 		.andExpect(view().name("guestbook"))
 		.andExpect(model().attributeExists("entries"))
-		.andExpect(model().size(3));
+		.andExpect(model().size(3)).hashCode();
 	}
 }
